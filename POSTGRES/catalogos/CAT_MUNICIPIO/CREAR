@@ -1,0 +1,45 @@
+create or replace     function  crear_cat_municipio
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int,
+	in num_departamento_region_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_municipio) from cat_municipio) is null
+			then 1 else (select max(num_municipio) from cat_municipio)+1 end);
+
+begin
+
+insert into cat_municipio 
+(
+	num_municipio,
+	num_departamento_region ,
+	nombre ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_departamento_region_,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_timestamp
+);
+return query  select CE.num_municipio,
+					 CE.nombre,
+					 CE.descripcion 
+					 from cat_municipio CE where CE.num_municipio = identificador limit 1;
+
+end;
+$body$;

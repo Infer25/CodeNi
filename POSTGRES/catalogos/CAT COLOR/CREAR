@@ -1,0 +1,42 @@
+create or replace     function  crear_cat_color
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_color) from cat_color) is null
+			then 1 else (select max(num_color) from cat_color)+1 end);
+
+begin
+
+insert into cat_color 
+(
+	num_color ,
+	nombre ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_timestamp
+);
+return query  select CE.num_color,
+					 CE.nombre,
+					 CE.descripcion 
+					 from cat_color CE where CE.num_color = identificador limit 1;
+
+end;
+$body$;

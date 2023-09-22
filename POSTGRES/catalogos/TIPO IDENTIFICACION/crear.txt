@@ -1,0 +1,38 @@
+CREATE or replace    FUNCTION  crear_tipo_identificacion_
+(
+	in Nombre_ text ,
+	in Descripcion_ text,
+	in RegistradoPor_ INT,
+	in Estado_ INT
+)
+RETURNS TABLE(identificador  integer,	nombre text,descripcion text,estado integer)
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE id_ INT = (SELECT CASE WHEN (SELECT MAX(numtipoidentificacion) FROM cat_tipo_identificacion) IS NULL
+			THEN 1 ELSE (SELECT MAX(numtipoidentificacion) FROM cat_tipo_identificacion)+1 END);
+
+BEGIN
+
+INSERT INTO cat_tipo_identificacion 
+(
+	numtipoidentificacion,
+	nombre,
+	descripcion,
+	registradopor,
+	fecharegistro,
+	estado
+)
+VALUES
+(
+	id_,
+	Nombre_,
+	Descripcion_,
+	RegistradoPor_,
+	current_timestamp,
+	Estado_	
+);
+RETURN QUERY  select CE.numtipoidentificacion,CE.nombre,CE.descripcion,CE.estado from cat_tipo_identificacion CE 	WHERE CE.numtipoidentificacion = id_ limit 1;
+
+END;
+$BODY$;
+

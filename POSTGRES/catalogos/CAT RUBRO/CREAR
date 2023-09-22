@@ -1,0 +1,45 @@
+create or replace     function  crear_cat_rubro
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int,
+	in num_tipo_rubro_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_rubro) from cat_rubro) is null
+			then 1 else (select max(num_rubro) from cat_rubro)+1 end);
+
+begin
+
+insert into cat_rubro 
+(
+	num_rubro,
+	num_tipo_rubro ,
+	nombre ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_tipo_rubro_,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_timestamp
+);
+return query  select CE.num_rubro,
+					 CE.nombre,
+					 CE.descripcion 
+					 from cat_rubro CE where CE.num_rubro = identificador limit 1;
+
+end;
+$body$;

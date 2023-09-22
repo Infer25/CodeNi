@@ -1,0 +1,18 @@
+create or replace      function  get_region_pais()
+returns table(
+	identificador  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+
+begin
+
+
+return query  select CE.num_region_pais,
+					 CE.nombre
+					 from cat_region_pais CE order by CE.num_region_pais DESC;
+
+end;
+$body$;

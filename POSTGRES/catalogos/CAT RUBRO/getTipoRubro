@@ -1,0 +1,18 @@
+create or replace      function  get_tipo_rubro()
+returns table(
+	identificador  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+
+begin
+
+
+return query  select CE.num_tipo_rubro,
+					 CE.nombre
+					 from cat_tipo_rubro CE order by CE.nombre DESC;
+
+end;
+$body$;

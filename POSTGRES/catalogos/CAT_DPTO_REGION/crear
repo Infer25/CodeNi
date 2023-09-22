@@ -1,0 +1,45 @@
+create or replace     function  crear_cat_departamento_region
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int,
+	in num_region_pais_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_departamento_region) from cat_departamento_region) is null
+			then 1 else (select max(num_departamento_region) from cat_departamento_region)+1 end);
+
+begin
+
+insert into cat_departamento_region 
+(
+	num_departamento_region,
+	num_region_pais ,
+	nombre ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_region_pais_,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_timestamp
+);
+return query  select CE.num_departamento_region,
+					 CE.nombre,
+					 CE.descripcion 
+					 from cat_departamento_region CE where CE.num_departamento_region = identificador limit 1;
+
+end;
+$body$;

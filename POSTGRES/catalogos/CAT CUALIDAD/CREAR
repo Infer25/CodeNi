@@ -1,0 +1,42 @@
+create or replace     function  crear_cat_cualidad
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_cualidad) from cat_cualidad) is null
+			then 1 else (select max(num_cualidad) from cat_cualidad)+1 end);
+
+begin
+
+insert into cat_cualidad 
+(
+	num_cualidad ,
+	nombre ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_timestamp
+);
+return query  select CE.num_cualidad,
+					 CE.nombre,
+					 CE.descripcion 
+					 from cat_cualidad CE where CE.num_cualidad = identificador limit 1;
+
+end;
+$body$;

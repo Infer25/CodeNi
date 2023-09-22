@@ -1,0 +1,170 @@
+create table cat_estado
+(
+	num_estado int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table cat_region_pais
+(
+	num_region_pais int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create   table cat_departamento_region
+(
+	num_departamento_region int not  null primary key,
+	num_region_pais int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_region_pais) references cat_region_pais(num_region_pais)
+);
+
+create table cat_municipio
+(
+	num_municipio int not  null primary key,
+	num_departamento_region int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_departamento_region) references cat_departamento_region(num_departamento_region)
+
+);
+
+create table cat_tipo_rubro
+(
+	num_tipo_rubro int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table cat_rubro
+(
+	num_rubro int not  null primary key,
+	num_tipo_rubro int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_tipo_rubro) references cat_tipo_rubro(num_tipo_rubro)
+
+);
+
+
+
+create table cat_color
+(
+	num_color int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create table cat_cualidad
+(
+	num_cualidad int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create table  cat_situacion_climatica
+(
+	num_situacion_climatica int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+
+create table  cat_temporada
+(
+	num_temporada int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table  cat_tipo_tierra
+(
+	num_tipo_tierra int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+
+
+create table cat_semilla
+(
+	num_semilla int not  null primary key,
+	num_rubro int not  null,
+	num_color int not  null,
+	num_cualidad int not null,
+	num_tolerancia int not null,
+	nombre varchar(150) unique not null,
+	potencial_rendimineto varchar(150), 
+	madurez_dias int not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_rubro) references cat_rubro(num_rubro),
+	foreign key(num_color) references cat_color(num_color),
+	foreign key(num_cualidad) references cat_cualidad(num_cualidad),
+	foreign key(num_tolerancia) references cat_tolerancia(num_tolerancia)
+
+);
+

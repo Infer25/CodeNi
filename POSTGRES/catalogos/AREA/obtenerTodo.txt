@@ -1,0 +1,165 @@
+
+CREATE OR REPLACE   FUNCTION obtenerarea
+(
+	in _criterio text,
+	in _filtro text,
+	in _estado integer,
+	in _pagina integer,
+	in _cantidadfilas integer
+) 
+
+RETURNS TABLE
+(
+numarea integer,
+nombrearea text,
+descripcion text,
+registradopor integer,
+fecharegistro timestamp without time zone, 
+actualizadopor integer,
+ultimafechaactualizacion timestamp without time zone,
+estado text
+) 
+LANGUAGE 'plpgsql'
+AS $BODY$
+
+DECLARE _salto INT = (_pagina-1)*_cantidadfilas;
+
+begin
+
+
+if(UPPER(_criterio)='ESTADO') then --estado
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado   
+from cat_area c  
+inner join cat_estado e on e.numestado = c.numarea
+where c.nombrearea ilike CONCAT(_filtro,'%') 
+and c.estado  =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+
+elsif(UPPER(_criterio)='DESCRIPCION' OR UPPER(_criterio)='DESCRIPCIÓN') then
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado   
+from cat_area c 
+inner join cat_estado e on e.numestado = c.numarea
+where c.descripcion ilike CONCAT(_filtro,'%') 
+and c.estado   =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+elsif(UPPER(_criterio)='REGISTRADO POR' OR UPPER(_criterio)='REGISTRADOPOR') then
+return query
+select
+c.numarea, 
+c.nombrearea,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado  
+from cat_area c  
+inner join cat_estado e on e.numestado = c.numarea
+where c.registradopor ilike CONCAT(_filtro,'%') 
+and c.estado =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+elsif(UPPER(_criterio)='ACTUALIZADO POR' OR UPPER(_criterio)='ACTUALIZADOPOR') then
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado   
+from cat_estado c  
+inner join cat_estado e on e.numestado = c.numarea
+where c.actualizadopor ilike CONCAT(_filtro,'%') 
+and c.estado =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+elsif(UPPER(_criterio)='FECHA DE REGISTRO' OR UPPER(_criterio)='FECHADEREGISTRO') then
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado   
+from cat_estado c  
+inner join cat_estado e on e.numestado = c.numarea
+where TO_CHAR(c.fecharegistro:: DATE, 'yyyy-MM-dd') =_filtro 
+and c.estado  =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+elsif(UPPER(_criterio)='FECHA DE ACTUALIZACION' OR UPPER(_criterio)='FECHADEACTUALIZACION') then
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado 
+from cat_estado c  
+inner join cat_estado e on e.numestado = c.numarea
+where TO_CHAR(c.ultimafechaactualizacion:: DATE, 'yyyy-MM-dd') =_filtro 
+and c.estado  =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+elsif(_criterio='_') then
+return query
+select
+c.numarea, 
+c.nombrearea ,
+c.descripcion ,
+c.registradopor,
+c.fecharegistro ,
+c.actualizadopor,
+c.ultimafechaactualizacion ,
+e.nombreestado 
+from cat_estado c  
+inner join cat_estado e on e.numestado = c.numarea
+where  c.estado  =_estado
+order by c.nombrearea
+offset (SELECT CASE WHEN (_salto)<=0
+THEN 0 ELSE _salto  end ) rows
+fetch next _cantidadfilas rows only;
+end if;
+end;
+$BODY$;

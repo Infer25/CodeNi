@@ -12,7 +12,8 @@ import { routerCatcualidad } from '@/modulos/catalogos/cat_cualidad/infraestruct
 import { routerCatSituacionClimatica } from '@/modulos/catalogos/cat_situacion_climatica/infraestructura/routes';
 import { routerCatTemporada } from '@/modulos/catalogos/cat_temporada/infraestructura/routes';
 import { routerCatTipoTierra } from '@/modulos/catalogos/cat_tipo_tierra/infraestructura/routes';
-
+import { routerCatTipoIdentificacion } from '@/modulos/catalogos/cat_tipo_identificacion/infraestructura/routes';
+import { routerTblPersona } from '@/modulos/catalogos/cat_persona/infraestructura/routes';
 
 const port = process.env.NODE_PORT;
 const app = express();
@@ -30,7 +31,9 @@ app.use(
   routerCatcualidad,
   routerCatSituacionClimatica,
   routerCatTemporada,
-  routerCatTipoTierra
+  routerCatTipoTierra,
+  routerCatTipoIdentificacion,
+  routerTblPersona
 );
 
 app.listen(3001, () => {

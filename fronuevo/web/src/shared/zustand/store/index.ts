@@ -26,8 +26,6 @@ import {
   createFrmTipoRubro,
 } from "../slice/frmTipoRubro";
 
-import { MenuSlice, createMenuSlice } from "../slice/menu";
-import { ThemeSlice, createThemeSlice } from "../slice/theme";
 import {
   ModelFormularioSituacionClimatica,
   createFrmSituacionClimaticaSlice,
@@ -36,10 +34,14 @@ import {
   ModelFormularioTemporada,
   createFrmTemporadaSlice,
 } from "../slice/frmTemporada";
+import { ModelFormularioTipoIdentificacion, createFrmTipoIdentificacionSlice } from "../slice/frmTipoIdentificacion";
 import {
   ModelFormularioTipoTierra,
   createFrmTipoTierraSlice,
 } from "../slice/frmTipoTierra";
+import { MenuSlice, createMenuSlice } from "../slice/menu";
+import { ThemeSlice, createThemeSlice } from "../slice/theme";
+import { ModelFormularioPersonaModelApiBackendPersona,createFrmPersonaModelApiBackendPersonaSlice } from "../slice/proceso/gestion_colaborador";
 
 export const useStoreGlobal = create<
   ThemeSlice &
@@ -54,7 +56,9 @@ export const useStoreGlobal = create<
     ModelFormularioCualidad &
     ModelFormularioSituacionClimatica &
     ModelFormularioTemporada &
-    ModelFormularioTipoTierra
+    ModelFormularioTipoTierra &
+    ModelFormularioTipoIdentificacion &
+    ModelFormularioPersonaModelApiBackendPersona
 >()((...a) => ({
   ...createThemeSlice(...a),
   ...createMenuSlice(...a),
@@ -69,4 +73,6 @@ export const useStoreGlobal = create<
   ...createFrmSituacionClimaticaSlice(...a),
   ...createFrmTemporadaSlice(...a),
   ...createFrmTipoTierraSlice(...a),
+  ...createFrmTipoIdentificacionSlice(...a),
+  ...createFrmPersonaModelApiBackendPersonaSlice(...a)
 }));

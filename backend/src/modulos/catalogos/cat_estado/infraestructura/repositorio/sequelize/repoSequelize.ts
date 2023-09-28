@@ -7,6 +7,7 @@ import { Op } from 'sequelize';
 import sequelize from 'sequelize';
 
 export class SequelizeRepository implements Repo_cat_estado {
+
   async validarActualizacion(nombre: string): Promise<State | null> {
     return await catEstado.findOne({
       where: {
@@ -45,6 +46,8 @@ export class SequelizeRepository implements Repo_cat_estado {
     );
     return resultado[0];
   }
+
+  
 
   /*async cambiarEstado(numestado: number): Promise<number> {
     const valor = await catEstado.findByPk(numestado);

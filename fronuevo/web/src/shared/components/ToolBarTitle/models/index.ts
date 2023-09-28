@@ -10,6 +10,7 @@ export type ModelToolBarTitle={
     subMenu:string,
     children?:JSX.Element | JSX.Element[],
     url:ModelRuta[]
+    close?:JSX.Element | JSX.Element[],
 
 
 }

@@ -16,6 +16,7 @@ export const ToolBarTitle: React.FC<ModelToolBarTitle> = ({
   subMenu,
   children,
   url,
+  close,
 }) => {
   const theme = useTheme();
   const primary = {
@@ -23,7 +24,7 @@ export const ToolBarTitle: React.FC<ModelToolBarTitle> = ({
     color: "White",
   };
   const secundary = {
-    fontSize: "1rem",
+    fontSize: ".9rem",
     color: "White",
   };
 
@@ -34,17 +35,13 @@ export const ToolBarTitle: React.FC<ModelToolBarTitle> = ({
           display: "flex",
           justifyContent: "space-between",
           //borderBottom: 1,
-         
-         
-
         }}
       >
         <Box
           sx={{
             //backgroundImage: ColorFondoMadera,
-            borderBottomRightRadius: 40,
+            borderBottomRightRadius: 30,
             bgcolor: theme.palette.primary.main,
-         
           }}
         >
           <ListItemText
@@ -55,7 +52,10 @@ export const ToolBarTitle: React.FC<ModelToolBarTitle> = ({
             secondaryTypographyProps={{ style: secundary }}
           />
         </Box>
+
         <Box sx={{ p: 1 }}>{children}</Box>
+
+        {close ? close : ""}
       </Box>
       <Box
         sx={{
@@ -68,11 +68,10 @@ export const ToolBarTitle: React.FC<ModelToolBarTitle> = ({
         <Breadcrumbs
           separator={<NavigateNextIcon fontSize="small" />}
           maxItems={2}
-         
         >
           {url.map((x) => (
-            <Typography key={x.id} sx={{fontSize:'1.1rem'}}>
-              <Link to={x.ruta} >{x.title}</Link>
+            <Typography key={x.id} sx={{ fontSize: "1.1rem" }}>
+              <Link to={x.ruta}>{x.title}</Link>
             </Typography>
           ))}
         </Breadcrumbs>

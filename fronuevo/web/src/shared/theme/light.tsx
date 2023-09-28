@@ -1,12 +1,12 @@
 import { createTheme } from "@mui/material";
 
 const colorTheme = {
-  principal: "#009431",
-  secundario: "#009431",
+  principal: "#688557",
+  secundario: "#688557",
   backGroud: "#FBF8EE",
-  tierra: "#7A502F",
+  tierra: "#A36627",
   secundarioMain: "#EAEFF2",
-  secundarioLight: "#009431",
+  secundarioLight: "#688557",
   colorBoton: "",
 };
 

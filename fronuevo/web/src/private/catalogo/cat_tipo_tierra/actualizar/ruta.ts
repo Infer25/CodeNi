@@ -1,4 +1,4 @@
-export const rutaFrmActualizarSituacionClimatica = [
+export const rutaFrmActualizarTipoTierra = [
     {
         id:1,
         title: "Sistema",
@@ -12,8 +12,8 @@ export const rutaFrmActualizarSituacionClimatica = [
       },
       {
         id:3,
-        title: "Listar situacion climatica",
-        ruta:"/sistema/viewCatalogo/situacion_climatica"
+        title: "Listar tipo de tierra",
+        ruta:"/sistema/viewCatalogo/tipo_tierra"
       },
       {
         id:4,

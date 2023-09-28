@@ -1,0 +1,476 @@
+create table cat_estado
+(
+	num_estado int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table cat_region_pais
+(
+	num_region_pais int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create   table cat_departamento_region
+(
+	num_departamento_region int not  null primary key,
+	num_region_pais int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_region_pais) references cat_region_pais(num_region_pais)
+);
+
+create table cat_municipio
+(
+	num_municipio int not  null primary key,
+	num_departamento_region int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_departamento_region) references cat_departamento_region(num_departamento_region)
+
+);
+
+create table cat_tipo_rubro
+(
+	num_tipo_rubro int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table cat_rubro
+(
+	num_rubro int not  null primary key,
+	num_tipo_rubro int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_tipo_rubro) references cat_tipo_rubro(num_tipo_rubro)
+
+);
+
+create table cat_especie_rubro
+(
+	num_especie_rubro int not  null primary key,
+	num_rubro int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_rubro) references cat_rubro(num_rubro)
+
+);
+
+create table cat_variante_rubro
+(
+	num_variante_rubro int not  null primary key,
+	num_rubro int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_rubro) references cat_rubro(num_rubro)
+
+);
+
+create table cat_calidad
+(
+	num_calidad int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create table cat_calidad_rubro
+(
+	num_calidad_rubro int not  null primary key,
+	num_rubro int not  null,
+	num_calidad int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_rubro) references cat_rubro(num_rubro),
+	foreign key(num_calidad) references cat_calidad(num_calidad)
+);
+
+
+
+
+create table cat_departamento_empresa
+(
+	num_departamento_empresa int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+
+create   table cat_area
+(
+	num_area int not  null primary key,
+	num_departamento_empresa int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_departamento_empresa) references cat_departamento_empresa(num_departamento_empresa)
+);
+
+
+
+
+create table cat_cargo
+(
+	num_cargo int not  null primary key,
+	num_area int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_area) references cat_area(num_area)
+	
+
+);
+
+create table cat_estado_civil
+(
+	num_estado_civil int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+create  table  cat_persona
+(
+	num_persona int not  null primary key,
+	fechanac_fechaconstitucion timestamp  not null,
+	origen int not null,--municipio
+	nombre varchar(120) not null,
+	apellido_razonsocial varchar(125) not null,
+	num_seguro varchar(75) null unique,
+	movil varchar(35) not null unique,
+	email varchar(35) not null unique,
+	direccion text not null,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(origen) references cat_municipio(num_municipio)
+	
+)
+
+
+
+
+create   table cat_empleado
+(--DATOS DE EMPLEADOS 
+	num_empleado int not  null primary key,
+	num_persona int not null,
+	num_estado_civil int not  null,
+	num_estado int not  null,
+	cod_empleado varchar(45) unique not null,
+	genero varchar(1) check (genero in('F','M')) not null,
+	foto varchar(300) not null,--ruta
+	record_policia varchar(300) not null,--ruta
+	registrado_por int not null,--empleado que lo registro
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,--que empleado actualiza la info
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_persona) references cat_persona(num_persona),
+	foreign key(num_estado_civil) references cat_estado_civil(num_estado_civil),
+	foreign key(num_estado) references cat_estado(num_estado)
+
+);
+
+
+
+create table tbl_empleado_cargo
+(
+	num_empleado_cargo int not  null primary key,
+	num_empleado int not  null,
+	num_cargo int not  null,
+	num_estado int not  null,
+	registrado_por int not null,--empleado que lo registro
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,--que empleado actualiza la info
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_empleado) references cat_empleado(num_empleado),
+	foreign key(num_cargo) references cat_cargo(num_cargo),
+	foreign key(num_estado) references cat_estado(num_estado)
+	
+
+);
+
+
+-------seguridad 
+create  table cat_perfil
+(
+	num_perfil int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_po int null,
+	ultima_fecha_actualizacion timestamp null
+
+
+);
+
+
+create table cat_usuario
+(
+	num_usuario int not  null primary key,
+	num_empleado int not  null,
+	num_estado int not  null,
+	num_perfil int not null,
+	usuario varchar(35) not null unique,
+	clave_acceso bytea not null,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_empleado) references cat_empleado(num_empleado),
+	foreign key(num_estado) references cat_estado(num_estado),
+	foreign key(num_perfil) references cat_perfil(num_perfil)
+	
+
+);
+
+
+
+create  table cat_modulo
+(
+	num_modulo int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create  table cat_sub_modulo
+(
+	num_sub_modulo int not  null primary key,
+	num_modulo int not  null,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_modulo) references cat_modulo(num_modulo)
+);
+
+
+
+
+
+
+create  table cat_accion
+(
+	num_accion int not  null primary key,
+	num_sub_modulo int not  null ,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_sub_modulo) references cat_sub_modulo(num_sub_modulo)
+);
+
+
+create   table   tbl_control_acceso_sistema
+(
+	num_control_acceso_sistema int not  null primary key,
+	num_perfil int  not null,
+	num_sub_modulo int not null,
+	num_accion int not null,
+	num_estado int not null,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_perfil) references cat_perfil(num_perfil),
+	foreign key(num_sub_modulo) references cat_sub_modulo(num_sub_modulo),
+	foreign key(num_accion) references cat_accion(num_accion),
+	foreign key(num_estado) references cat_estado(num_estado),
+	foreign key(registrado_por) references cat_empleado(num_empleado)
+)
+
+
+-----------------------
+--proveedor
+create table cat_tipo_proveedor
+(
+	num_tipo_proveedor int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+create table cat_tipo_empresa
+(
+	num_tipo_empresa int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create table cat_clasificacion_empresa
+(
+	num_clasificacion_empresa int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create table cat_forma_pago
+(
+	num_forma_pago int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create  table cat_tipo_contacto_proveedor
+(
+	num_tipo_contacto_proveedor int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+create  table cat_proveedor
+(
+	num_proveedor int not  null primary key,
+	num_persona int not null,
+	num_tipo_proveedor int not null,
+	num_tipo_empresa int not null,
+	num_clasificacion_empresa int not null,
+	registrado_por int not null,--empleado que lo registro,
+	num_estado int not  null,
+	tiempo_entrega_dia int not null,
+	cod_proveedor varchar(45) unique not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,--que empleado actualiza la info solo referencia
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_persona) references cat_persona(num_persona),
+	foreign key(num_tipo_proveedor) references cat_tipo_proveedor(num_tipo_proveedor),
+	foreign key(num_tipo_empresa) references cat_tipo_empresa(num_tipo_empresa),
+	foreign key(num_clasificacion_empresa) references cat_clasificacion_empresa(num_clasificacion_empresa),
+	foreign key(registrado_por) references cat_empleado(num_empleado),
+	foreign key(num_estado) references cat_estado(num_estado)
+
+);
+
+create table cat_forma_pago_proveedor
+(
+	num_forma_pago_proveedor int not  null primary key,
+	num_proveedor int not  null,
+	num_forma_pago int not  null,
+	registrado_por int not null,
+	num_estado int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_proveedor) references cat_proveedor(num_proveedor),
+	foreign key(num_forma_pago) references cat_forma_pago(num_forma_pago),
+	foreign key(num_estado) references cat_estado(num_estado)
+);
+
+
+
+create table tbl_Contacto_proveedor(
+	num_contacto_proveedor int not null primary key,
+	num_tipo_contacto_proveedor int not null,
+	num_proveedor int not  null,
+	contacto int not null,--contacto la persona
+	registrado_por int not null,--empleado que lo registro,
+	num_estado int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_tipo_contacto_proveedor) references cat_tipo_contacto_proveedor(num_tipo_contacto_proveedor),
+	foreign key(num_proveedor) references cat_proveedor(num_proveedor),
+	foreign key(contacto) references cat_persona(num_persona),
+	foreign key(num_estado) references cat_estado(num_estado),
+	foreign key (registrado_por) references cat_empleado(num_empleado)
+
+);
+

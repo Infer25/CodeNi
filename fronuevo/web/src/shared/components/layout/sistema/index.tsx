@@ -16,7 +16,9 @@ export const Sistema: React.FC<{}> = () => {
   return (
     <Stack
       sx={{
-        bgcolor: theme.palette.secondary.main,
+       // bgcolor: theme.palette.secondary.main,
+       
+
         minWidth: "370px",
       }}
       height={"100vh"}
@@ -39,6 +41,7 @@ export const Sistema: React.FC<{}> = () => {
           sx={{
             //minWidth: "350px",
             height: "89%",
+           
           }}
         >
           <Outlet />

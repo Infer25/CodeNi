@@ -42,8 +42,8 @@ export const ItemCatalogo = [
   },
   {
     id: 7,
-    title: "Tipo de rubro",
-    ruta: "tipoRubro",
+    title: "Area",
+    ruta: "area",
   },
   {
     id: 8,
@@ -72,5 +72,10 @@ export const ItemCatalogo = [
     ruta: "tipo_tierra",
   },
   
+  {
+    id: 13,
+    title: "Tipo de identificacion",
+    ruta: "tipo_identificacion",
+  },
   
 ];

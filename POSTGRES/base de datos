@@ -142,6 +142,53 @@ create table  cat_tipo_tierra
 	ultima_fecha_actualizacion timestamp null
 
 );
+/////////////////
+	create table  cat_tipo_identificacion
+(
+	num_tipo_identificacion int not  null primary key,
+	nombre varchar(150) unique not null,
+	descripcion text,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null
+
+);
+
+
+create   table  cat_persona
+(
+	num_persona int not  null primary key,
+	fechanac_fechaconstitucion timestamp  not null,
+	origen int not null,--municipio
+	nombre varchar(120) not null,
+	apellido_razonsocial varchar(125) not null,
+	movil varchar(35) not null unique,
+	email varchar(35) not null unique,
+	direccion text not null,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(origen) references cat_municipio(num_municipio)
+	
+)
+
+
+create table  tbl_persona_identificacion
+(
+	num_persona_identificacion int not  null primary key0,
+	num_persona int not null,
+	num_tipo_identificacion int not null,
+	identificacion varchar(80) unique not null,
+	registrado_por int not null,
+	fecha_registro timestamp default current_timestamp not  null,
+	actualizado_por int null,
+	ultima_fecha_actualizacion timestamp null,
+	foreign key(num_persona) references cat_persona,
+	foreign key(num_tipo_identificacion) references cat_tipo_identificacion
+
+);
 
 
 

@@ -27,6 +27,10 @@ import { FrmListarSituacionClimatica } from "@/private/catalogo/cat_situacion_cl
 import { FrmActualizarTemporada } from "@/private/catalogo/cat_temporada/actualizar/FrmActualizarTemporada";
 import { FrmCrearTemporada } from "@/private/catalogo/cat_temporada/crear/FrmCrearTemporada";
 import { FrmListarTemporada } from "@/private/catalogo/cat_temporada/listar";
+import { FrmActualizarTipoIdentificacion } from "@/private/catalogo/cat_tipo_identificacion/actualizar/FrmActualizarTipoIdentificacion";
+import { FrmCrearTipoIdentificacion } from "@/private/catalogo/cat_tipo_identificacion/crear/FrmCrearTipoIdentificacion";
+import { FrmListarTipoIdentificacion } from "@/private/catalogo/cat_tipo_identificacion/listar";
+import { FrmActualizarTipoTierra } from "@/private/catalogo/cat_tipo_tierra/actualizar/FrmActualizarTipoTierra";
 import { FrmCrearTipoTierra } from "@/private/catalogo/cat_tipo_tierra/crear/FrmCrearTipoTierra";
 import { FrmListarTipoTierra } from "@/private/catalogo/cat_tipo_tierra/listar/frmTolerancia";
 
@@ -36,6 +40,8 @@ import { FrmEstado } from "@/private/catalogo/estado/listar/components/frmListar
 import { FrmActualizarTipoRubro } from "@/private/catalogo/tipo_rubro/actualizar/FrmActualizarTipoRubro";
 import { FrmCrearTipoRubro } from "@/private/catalogo/tipo_rubro/crear/FrmCrearTipoRubro";
 import { FrmListarTipoRubro } from "@/private/catalogo/tipo_rubro/listar/components/frmTipoRubro";
+import { FrmCrearPersona } from "@/private/proceso/gestion_colaborador/crear/FrmCrearPersona";
+import { FrmListarPersona } from "@/private/proceso/gestion_colaborador/listar/frmListarPersona";
 
 import { Sistema } from "@/shared/components/layout/sistema";
 
@@ -224,6 +230,38 @@ export const router = createBrowserRouter([
         path: "viewCatalogo/tipo_tierra/crear",
         element: <FrmCrearTipoTierra />,
       },
+      {
+        path: "viewCatalogo/tipo_tierra/actualizar",
+        element: <FrmActualizarTipoTierra />,
+      },
+
+      ////TipoIdentificacion
+
+      {
+        path: "viewCatalogo/tipo_identificacion",
+        element: <FrmListarTipoIdentificacion />,
+      },
+      
+      {
+        path: "viewCatalogo/tipo_identificacion/crear",
+        element: <FrmCrearTipoIdentificacion />,
+      },
+      {
+        path: "viewCatalogo/tipo_identificacion/actualizar",
+        element: <FrmActualizarTipoIdentificacion />,
+      },
+    ////////////////////////////////GESTION DE COLABORADOR
+    {
+      path: "listar_colaborador",
+      element: <FrmListarPersona />,
+    },
+    {
+      path: "listar_colaborador/crear",
+      element: <FrmCrearPersona />,
+    },
+
+
+    
       {
         //base
         path: "consulta",

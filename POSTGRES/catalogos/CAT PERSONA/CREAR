@@ -1,0 +1,122 @@
+create or replace      function  crear_cat_persona
+(
+	in fechanac_fechaconstitucion_ timestamp,
+	in origen_ int ,--municipio
+	in nombre_ varchar(120),
+	in apellido_razonsocial_ varchar(125) ,
+	in movil_ varchar(35),
+	in email_ varchar(35),
+	in direccion_ text,
+	in registrado_por_ int,
+	in identificador_ jsonb
+)
+returns table(
+	num  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_persona) from cat_persona) is null
+			then 1 else (select max(num_persona) from cat_persona)+1 end);
+			
+declare contador integer :=0;
+
+declare valor integer:=1;
+
+declare identificador_tbl2 integer = 0;
+
+declare valorjson integer:=0;
+begin
+
+
+
+
+insert into cat_persona 
+(
+	num_persona ,
+	fechanac_fechaconstitucion,
+	origen,
+	nombre,
+	apellido_razonsocial,
+	movil,
+	email,
+	direccion,
+	registrado_por ,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	fechanac_fechaconstitucion_,
+	origen_,
+	lower(nombre_),
+	lower(apellido_razonsocial_),
+	movil_,
+	email_ ,
+	direccion_,
+	registrado_por_,
+	current_timestamp
+);
+
+create temp table IF NOT EXISTS  tem_identificador  
+	(
+		id_  varchar(20),
+		id_tipo_identificacion varchar(20),
+		identificacion varchar(20)
+	);
+
+
+
+contador:=(jsonb_array_length(identificador_));
+
+
+
+while valor <= contador loop
+
+
+
+
+identificador_tbl2 :=(select case when (select max(num_persona_identificacion) from tbl_persona_identificacion) is null
+				then 1 else (select max(num_persona_identificacion) from tbl_persona_identificacion)+1 end);
+				
+
+
+insert into tem_identificador 
+(
+id_,
+id_tipo_identificacion,
+identificacion 
+)
+select identificador_-> valorjson->>'id',
+	identificador_-> valorjson->>'num_tipo_identificacion',
+	identificador_-> valorjson->>'identificacion';
+	
+	
+insert into tbl_persona_identificacion 
+(
+	num_persona_identificacion ,
+	num_persona ,
+	num_tipo_identificacion ,
+	identificacion ,
+	registrado_por,
+	fecha_registro 
+)
+select identificador_tbl2,
+	identificador,
+	e.id_tipo_identificacion::integer,
+	e.identificacion,
+	registrado_por_,
+	current_timestamp
+	from tem_identificador e where cast (e.id_ AS integer)= valor;
+raise notice 'Out addition count %', valor;
+valorjson:=valorjson+1;
+valor := valor+1;
+end loop;
+
+return query  select CE.num_persona,
+					 CE.nombre
+					 from cat_persona CE where CE.num_persona = identificador limit 1;
+
+end;
+$body$;

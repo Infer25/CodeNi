@@ -10,7 +10,7 @@ export const navLinks = [
 
   {
     id: 1,
-    title: "Gestion del sistema",
+    title: "G.sistema",
     icon: <LineAxisOutlinedIcon fontSize="large"  />,
 
     lista: [
@@ -31,7 +31,7 @@ export const navLinks = [
   },
   {
     id: 4,
-    title: "Gestion de cosecha",
+    title: "G.cosecha",
     icon: <GroupIcon fontSize="large" />,
     lista: [
       {
@@ -52,20 +52,20 @@ export const navLinks = [
   },
   {
     id: 7,
-    title: "Gestion de caja",
+    title: "G.colaborador",
     icon: <PaidIcon fontSize="large" />,
     lista: [
       {
         id: 8,
-        title: "Registro de caja",
-        path: "gestionEmpleado",
+        title: "Registro",
+        path: "#",
         icon: <BadgeSharpIcon fontSize="small" />,
 
       },
       {
         id: 9,
-        title: "consulta caja",
-        path: "gestionEmpleado",
+        title: "Consulta",
+        path: "listar_colaborador",
         icon: <BadgeSharpIcon fontSize="small" />,
 
       },
@@ -73,7 +73,7 @@ export const navLinks = [
   },
   {
     id: 10,
-    title: "Gestion del sistema/",
+    title: "G.banco de semilla",
     icon: <SettingsSuggestIcon fontSize="large" />,
     lista: [
 

@@ -19,8 +19,8 @@ export const TableCustom: React.FC<ModelTableHeadList> = ({
     <TableContainer
       sx={{
         height: "100%",
-       // maxHeight:'50vh',
-        //minHeight:'50vh',
+        //maxHeight:'30vh',
+        minHeight:'20vh',
         paddingX:1,
         
         "&::-webkit-scrollbar": {

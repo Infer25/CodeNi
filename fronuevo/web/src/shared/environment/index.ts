@@ -15,7 +15,9 @@ export const Rutas = {
   catCualidad:"cualidad",
   CatSituacionClimatica:'situacion_climatica',
   catTemporada:'temporada',
-  cattipoTierra:'tipo_tierra'
+  cattipoTierra:'tipo_tierra',
+  cattipoIdentificacion:'tipo_identificacion',
+  persona:'persona'
 };
 
 export const cantidadFilas = [{ value: 5 }, { value: 10 }, { value: 25 }];

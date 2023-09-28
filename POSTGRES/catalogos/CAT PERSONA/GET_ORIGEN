@@ -1,0 +1,18 @@
+create or replace      function  get_origen()
+returns table(
+	identificador  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+
+begin
+
+
+return query  select CE.num_municipio,
+					 CE.nombre
+					 from cat_municipio CE order by CE.nombre DESC;
+
+end;
+$body$;

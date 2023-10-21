@@ -1,0 +1,151 @@
+create or replace    function  crear_proveedor
+(
+	in num_persona_ int,
+	in num_tipo_empresa_ int,
+	in num_clasificacion_empresa_ int,
+	in cantidad_dias_espera_ int,
+	in registrado_por_ int,
+	in list_categoria_proveedor_ jsonb,
+	in list_forma_pago_proveedor_ jsonb
+)
+returns integer
+    language 'plpgsql'
+AS $body$
+
+ declare identificador integer:= (select case when (select max(num_proveedor) from cat_proveedor) 
+												is null then 1 else (select max(num_proveedor) 
+												from cat_proveedor)+1 end);
+												
+declare cod_proveedor varchar(100) = (SELECT concat('PRV-', identificador));
+
+declare identificador_proveedor_categoria integer :=0;
+declare identificador_proveedor_forma_pago integer :=0;
+
+declare contador integer :=0;
+declare valor integer:=1;
+declare valorjson integer:=0;
+
+
+declare valor_ integer:=1;
+declare valorjson_ integer:=0;
+declare contador_ integer :=0;
+begin
+
+insert into cat_proveedor 
+(
+	num_proveedor ,
+	num_persona,
+	num_tipo_empresa ,
+	num_clasificacion_empresa ,
+	num_estado ,
+	cod_proveedor,
+	cantidad_dias_espera ,
+	registrado_por ,
+	fecha_registro
+)values
+(
+	identificador,
+	num_persona_,
+	num_tipo_empresa_,
+	num_clasificacion_empresa_,
+	(select num_estado from cat_estado where nombre='activo'),
+	cod_proveedor,
+	cantidad_dias_espera_,
+	registrado_por_,
+	current_date
+);
+
+
+
+drop table IF  EXISTS tem_list_categoria_proveedor;
+create temp table IF NOT EXISTS  tem_list_categoria_proveedor (id_  varchar(20),id_categoria_proveedor varchar(20));
+
+contador:=(jsonb_array_length(list_categoria_proveedor_));
+
+while valor <= contador loop
+
+ identificador_proveedor_categoria:= (select case when (select max(num_proveedor_categoria_proveedor) from tbl_proveedor_categoria_proveedor) is null
+			then 1 else (select max(num_proveedor_categoria_proveedor) from tbl_proveedor_categoria_proveedor)+1 end);
+			
+
+insert into tem_list_categoria_proveedor(id_,id_categoria_proveedor)
+	select list_categoria_proveedor_-> valorjson->>'id',
+	list_categoria_proveedor_-> valorjson->>'num_categoria_proveedor';
+
+
+insert into tbl_proveedor_categoria_proveedor 
+(
+	num_proveedor_categoria_proveedor ,
+	num_proveedor,
+	num_categoria_proveedor ,
+	num_estado ,
+	registrado_por,
+	fecha_registro
+)
+select 
+	identificador_proveedor_categoria,
+	identificador,
+	e.id_categoria_proveedor::integer,
+	(select num_estado from cat_estado where nombre='activo'),
+	registrado_por_,
+	current_date
+	from tem_list_categoria_proveedor e where cast (e.id_ AS integer)= valor;
+
+valorjson:=valorjson+1;
+valor := valor+1;
+
+end loop;
+
+
+drop table IF  EXISTS tem_list_forma_pago_proveedor;
+create temp table IF NOT EXISTS  tem_list_forma_pago_proveedor (id_  varchar(20),id_forma_pago_proveedor varchar(20));
+
+contador_:=(jsonb_array_length(list_forma_pago_proveedor_));
+
+
+
+while valor_ <= contador_ loop
+
+ identificador_proveedor_forma_pago:= (select case when (select max(num_proveedor_forma_pago_proveedor) 
+										from tbl_proveedor_forma_pago_proveedor) is null
+										then 1 else (select max(num_proveedor_forma_pago_proveedor) 
+										from tbl_proveedor_forma_pago_proveedor)+1 end);
+			
+
+insert into tem_list_forma_pago_proveedor(id_,id_forma_pago_proveedor)
+	select list_forma_pago_proveedor_-> valorjson_->>'id',
+	list_forma_pago_proveedor_-> valorjson_->>'num_forma_pago';
+
+
+insert into tbl_proveedor_forma_pago_proveedor 
+(
+	num_proveedor_forma_pago_proveedor ,
+	num_proveedor,
+	num_forma_pago ,
+	num_estado ,
+	registrado_por,
+	fecha_registro
+)
+select 
+	identificador_proveedor_forma_pago,
+	identificador,
+	e.id_forma_pago_proveedor::integer,
+	(select num_estado from cat_estado where nombre='activo'),
+	registrado_por_,
+	current_date
+	from tem_list_forma_pago_proveedor e where cast (e.id_ AS integer)= valor_;
+
+valorjson_:=valorjson_+1;
+valor_ := valor_+1;
+
+end loop;
+
+if not found then
+        return 0;
+    end if;
+ return 1;
+
+end;
+$body$;
+
+

@@ -1,0 +1,41 @@
+create or replace      function  crear_cat_area
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_area) from cat_area) is null
+			then 1 else (select max(num_area) from cat_area)+1 end);
+
+begin
+
+insert into cat_area 
+(
+	num_area ,
+	nombre_area ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+return query  select CE.num_area,
+					 CE.nombre_area,
+					 CE.descripcion 
+					 from cat_area CE where CE.num_area = identificador limit 1;
+end;
+$body$;

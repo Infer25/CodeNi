@@ -1,0 +1,51 @@
+.contacto .inputNombre {
+    background-color: #E9E9E9;
+    border: 1px solid black;
+}
+
+.contacto .inputNombre::placeholder {
+    color: #000;
+    font-weight: bold;
+}
+
+.contacto .inputEmail {
+    background-color: #E9E9E9;
+    border: 1px solid black;
+}
+
+.contacto .inputEmail::placeholder {
+    color: #000;
+    font-weight: bold;
+}
+
+.contacto .inputAsunto {
+    background-color: #E9E9E9;
+    border: 1px solid black;
+}
+
+.contacto .inputAsunto::placeholder {
+    color: #000;
+    font-weight: bold;
+}
+
+.contacto .inputMensaje {
+    background-color: #E9E9E9;
+    border: 1px solid black;
+}
+
+.contacto .inputMensaje::placeholder {
+    color: #000;
+    font-weight: bold;
+}
+
+.contacto .botonArea {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.contacto .botonArea a {
+    width: 100px;
+    margin-top: 1rem;
+    margin-right: 1rem;
+}

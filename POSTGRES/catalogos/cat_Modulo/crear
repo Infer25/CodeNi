@@ -1,0 +1,41 @@
+create or replace    function  crear_cat_modulo
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_modulo) from cat_modulo) is null
+			then 1 else (select max(num_modulo) from cat_modulo)+1 end);
+
+begin
+
+insert into cat_modulo 
+(
+	num_modulo ,
+	nombre_modulo ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+return query  select CE.num_modulo,
+					 CE.nombre_modulo,
+					 CE.descripcion 
+					 from cat_modulo CE where CE.num_modulo = identificador limit 1;
+end;
+$body$;

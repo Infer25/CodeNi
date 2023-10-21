@@ -1,0 +1,41 @@
+create or replace      function  crear_cat_forma_pago
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_forma_pago) from cat_forma_pago) is null
+			then 1 else (select max(num_forma_pago) from cat_forma_pago)+1 end);
+
+begin
+
+insert into cat_forma_pago 
+(
+	num_forma_pago ,
+	nombre_forma_pago ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+return query  select CE.num_forma_pago,
+					 CE.nombre_forma_pago,
+					 CE.descripcion 
+					 from cat_forma_pago CE where CE.num_forma_pago = identificador limit 1;
+end;
+$body$;

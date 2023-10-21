@@ -1,0 +1,136 @@
+create or replace       function  crear_tbl_historial_cargo_colaborador
+(
+	in num_colaborador_ int,
+	in num_cargo_ int,
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns integer
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_historial_cargo_colaborador) from tbl_historial_cargo_colaborador) is null
+			then 1 else (select max(num_historial_cargo_colaborador) from tbl_historial_cargo_colaborador)+1 end);
+			
+declare cargo_activo integer =(select h.num_cargo from tbl_historial_cargo_colaborador h 
+	where h.num_colaborador=num_colaborador_ and
+		h.num_estado=(select c.num_estado from cat_estado c where c.nombre='activo'));
+
+declare estado_cargo integer = (select case when (select c.nombre from tbl_historial_cargo_colaborador h 
+ 	inner join cat_cargo c on h.num_cargo = c.num_cargo
+ 		where h.num_colaborador = registrado_por_ 
+ 			and h.num_estado = (select e.num_estado from cat_estado e where e.nombre ='activo')) ='gerente'
+			then (select e.num_estado from cat_estado e where e.nombre ='activo')
+				else (select e.num_estado from cat_estado e where e.nombre ='en espera de aprobación') end);
+				
+				
+							
+declare cargo_espera integer =(select h.num_cargo from tbl_historial_cargo_colaborador h 
+	where h.num_colaborador=num_colaborador_ and
+		h.num_estado=(select c.num_estado from cat_estado c where c.nombre='en espera de aprobación'));
+
+declare cargo_inactivo integer =(select h.num_cargo from tbl_historial_cargo_colaborador h 
+	where h.num_colaborador=num_colaborador_ and
+		h.num_estado=(select c.num_estado from cat_estado c where c.nombre='inactivo') and h.num_cargo= num_cargo_);
+begin
+
+
+if(cargo_activo is not null and cargo_activo <> num_cargo_  and cargo_espera is null) then
+
+update tbl_historial_cargo_colaborador set 
+	num_estado=(select c.num_estado from cat_estado c where c.nombre='inactivo') ,
+	actualizado_por = registrado_por_,
+	ultima_fecha_actualizacion = current_date
+	where num_colaborador = num_colaborador_ and num_estado=(select c.num_estado from cat_estado c where c.nombre='activo' );
+
+insert into tbl_historial_cargo_colaborador 
+(
+	num_historial_cargo_colaborador ,
+	num_colaborador ,
+	num_cargo ,
+	num_estado ,
+	descripcion,
+	registrado_por ,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_colaborador_,
+	num_cargo_,
+	estado_cargo,
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+elsif(cargo_activo is null and   cargo_espera is not null and cargo_espera<>num_cargo_ )then  
+update tbl_historial_cargo_colaborador set 
+	num_estado=(select c.num_estado from cat_estado c where c.nombre='inactivo') ,
+	actualizado_por = registrado_por_,
+	ultima_fecha_actualizacion = current_date
+	where num_colaborador = num_colaborador_ 
+	and num_estado=(select c.num_estado from cat_estado c where  c.nombre= 'en espera de aprobación');
+insert into tbl_historial_cargo_colaborador 
+(
+	num_historial_cargo_colaborador ,
+	num_colaborador ,
+	num_cargo ,
+	num_estado ,
+	descripcion,
+	registrado_por ,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_colaborador_,
+	num_cargo_,
+	estado_cargo,
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+elsif(cargo_inactivo is not null )then  
+update tbl_historial_cargo_colaborador set 
+	num_estado=(select c.num_estado from cat_estado c where c.nombre='inactivo') ,
+	actualizado_por = registrado_por_,
+	ultima_fecha_actualizacion = current_date
+	where num_colaborador = num_colaborador_ 
+	and num_estado=(select c.num_estado from cat_estado c where  c.nombre= 'en espera de aprobación' or c.nombre= 'activo');
+
+
+update tbl_historial_cargo_colaborador set 
+	num_estado=(select c.num_estado from cat_estado c where c.nombre='activo') ,
+	actualizado_por = registrado_por_,
+	ultima_fecha_actualizacion = current_date
+	where num_colaborador = num_colaborador_ 
+	and num_estado=(select c.num_estado from cat_estado c where  c.nombre= 'inactivo') and num_cargo = num_cargo_;
+
+elsif(cargo_activo is null and cargo_espera is null)then  
+insert into tbl_historial_cargo_colaborador 
+(
+	num_historial_cargo_colaborador ,
+	num_colaborador ,
+	num_cargo ,
+	num_estado ,
+	registrado_por ,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_colaborador_,
+	num_cargo_,
+	estado_cargo,
+	registrado_por_,
+	current_date
+);
+
+end if;
+
+   if not found then
+        return 0;
+    end if;
+ return 1;
+end;
+$body$;

@@ -1,0 +1,18 @@
+create or replace      function  get_estado_civil()
+returns table(
+	identificador  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+
+begin
+
+
+return query  select CE.num_estado_civil,
+					 CE.nombre
+					 from cat_estado_civil CE order by CE.nombre DESC;
+
+end;
+$body$;

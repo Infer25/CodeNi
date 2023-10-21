@@ -1,0 +1,18 @@
+create or replace      function  get_municipio()
+returns table(
+	identificador  integer,
+	nombre varchar(150)
+)
+    language 'plpgsql'
+AS $body$
+
+
+begin
+
+
+return query  select CE.num_departamento_region,
+					 CE.nombre
+					 from cat_departamento_region CE order by CE.nombre DESC;
+
+end;
+$body$;

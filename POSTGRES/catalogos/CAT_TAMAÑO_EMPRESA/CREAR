@@ -1,0 +1,41 @@
+create or replace      function  crear_cat_clasificacion_empresa
+(
+	in nombre_ varchar(150),
+	in descripcion_ text,
+	in registrado_por_ int
+)
+returns table(
+	num  integer,
+	nombre varchar(150),
+	descripcion text
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_clasificacion_empresa) from cat_clasificacion_empresa) is null
+			then 1 else (select max(num_clasificacion_empresa) from cat_clasificacion_empresa)+1 end);
+
+begin
+
+insert into cat_clasificacion_empresa 
+(
+	num_clasificacion_empresa ,
+	nombre_clasificacion_empresa ,
+	descripcion,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	lower(nombre_),
+	descripcion_,
+	registrado_por_,
+	current_date
+);
+return query  select CE.num_clasificacion_empresa,
+					 CE.nombre_clasificacion_empresa,
+					 CE.descripcion 
+					 from cat_clasificacion_empresa CE where CE.num_clasificacion_empresa = identificador limit 1;
+end;
+$body$;

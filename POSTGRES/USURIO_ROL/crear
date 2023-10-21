@@ -1,0 +1,101 @@
+create or replace    function  crear_tbl_usuario_rol
+(
+	in num_colaborador_ int,
+	in usuario_ varchar(35),
+	in pass_ text,
+	in registrado_por_ int,
+	in list_rol_ jsonb
+
+)
+returns integer
+    language 'plpgsql'
+AS $body$
+
+ declare identificador_usuario integer:= (select case when (select max(num_usuario) from cat_usuario) 
+												is null then 1 else (select max(num_usuario) 
+												from cat_usuario)+1 end);
+
+declare identificador integer :=0;
+declare contador integer :=0;
+declare valor integer:=1;
+declare valorjson integer:=0;
+declare validarusuario integer:=(select  u.num_usuario from cat_usuario u where u.num_colaborador = num_colaborador_);
+begin
+if(validarusuario is null) then
+insert into cat_usuario 
+(
+	num_usuario ,
+	num_colaborador,
+	num_estado ,
+	usuario ,
+	pass ,
+	registrado_por ,
+	fecha_registro
+)values
+(
+	identificador_usuario,
+	num_colaborador_,
+	(select num_estado from cat_estado where nombre='activo'),
+	usuario_,
+	pass_,
+	registrado_por_,
+	current_date
+);
+
+end if;
+
+drop table IF  EXISTS tem_list_rol;
+create temp table IF NOT EXISTS  tem_list_rol (id_  varchar(20),id_rol varchar(20));
+contador:=(jsonb_array_length(list_rol_));
+
+
+
+
+while valor <= contador loop
+
+ identificador:= (select case when (select max(num_usuario_rol) from tbl_usuario_rol) is null
+			then 1 else (select max(num_usuario_rol) from tbl_usuario_rol)+1 end);
+			
+
+insert into tem_list_rol(id_,id_rol)
+	select list_rol_-> valorjson->>'id',
+	list_rol_-> valorjson->>'num_rol';
+
+if((select num_rol from tbl_usuario_rol t where t.num_usuario = (
+	select us.num_usuario from cat_usuario us where  us.num_colaborador = num_colaborador_
+) and t.num_rol = (
+select temp_.id_rol::integer from tem_list_rol temp_  where cast (temp_.id_ AS integer)= valor
+))is null) then
+insert into tbl_usuario_rol 
+(
+	num_usuario_rol ,
+	num_usuario,
+	num_rol,
+	num_estado,
+	registrado_por ,
+	fecha_registro
+)
+select 
+	identificador,
+	num_colaborador_,
+	e.id_rol::integer,
+	(select num_estado from cat_estado where nombre='activo'),
+	registrado_por_,
+	current_date
+	from tem_list_rol e where cast (e.id_ AS integer)= valor;
+end if;	
+valorjson:=valorjson+1;
+valor := valor+1;
+
+end loop;
+
+if not found then
+        return 0;
+    end if;
+ return 1;
+
+
+end;
+$body$;
+
+

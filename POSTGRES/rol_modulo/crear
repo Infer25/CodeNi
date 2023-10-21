@@ -1,0 +1,72 @@
+create or replace    function  crear_tbl_rol_modulo
+(
+	in num_rol_ int,
+	in registrado_por_ int,
+	in list_modulo_ jsonb
+
+)
+returns integer
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer :=0;
+declare contador integer :=0;
+declare valor integer:=1;
+declare valorjson integer:=0;
+begin
+
+drop table IF  EXISTS tem_list_modulo;
+create temp table IF NOT EXISTS  tem_list_modulo (id_  varchar(20),id_modulo varchar(20));
+
+
+
+contador:=(jsonb_array_length(list_modulo_));
+
+
+
+
+while valor <= contador loop
+
+ identificador:= (select case when (select max(num_rol_modulo) from tbl_rol_modulo) is null
+			then 1 else (select max(num_rol_modulo) from tbl_rol_modulo)+1 end);
+			
+
+insert into tem_list_modulo(id_,id_modulo)
+	select list_modulo_-> valorjson->>'id',
+	list_modulo_-> valorjson->>'num_modulo';
+
+if((select num_modulo from tbl_rol_modulo t where t.num_rol = num_rol_ and t.num_modulo = (
+select temp_.id_modulo::integer from tem_list_modulo temp_  where cast (temp_.id_ AS integer)= valor
+))is null) then
+insert into tbl_rol_modulo 
+(
+	num_rol_modulo ,
+	num_rol ,
+	num_modulo ,
+	num_estado,
+	registrado_por ,
+	fecha_registro
+)
+select 
+	identificador,
+	num_rol_,
+	e.id_modulo::integer,
+	(select num_estado from cat_estado where nombre='activo'),
+	registrado_por_,
+	current_date
+	from tem_list_modulo e where cast (e.id_ AS integer)= valor;
+end if;	
+valorjson:=valorjson+1;
+valor := valor+1;
+
+end loop;
+
+if not found then
+        return 0;
+    end if;
+ return 1;
+
+
+end;
+$body$;
+

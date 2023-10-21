@@ -1,0 +1,40 @@
+create table tbl_usuario
+(
+	num_usuario not null primary key,
+	num_empleado int not null,
+	usuario varchar(35)not null unique,
+	pass varchar(16) not null
+	
+);
+
+create table cat_rol
+(
+	num_rol int not null primary key,
+	nombre varchar(100) not null unique,
+);
+
+create table cat_permiso
+(
+num_permiso int not null primary key,
+nombre varchar(100) not null unique,
+);
+
+create table tbl_usuario_rol
+(
+	
+	num_usuario_rol int not null primary key,
+	num_usuario int not null,
+	num_rol  int not null,
+	foreign key(num_usuario) references tbl_usuario(num_usuario),
+	foreign key(num_rol)references cat_rol(num_rol)
+);
+
+
+create table  tbl_rol_permiso 
+(
+	num_rol_permiso  int not null primary key,	
+	num_rol int not null,
+	num_permiso int not null,
+	foreign key(num_rol)references cat_rol(num_rol),
+	foreign key(num_permiso) references cat_permiso(num_permiso),
+);

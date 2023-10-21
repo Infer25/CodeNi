@@ -1,0 +1,75 @@
+/* Seccion de Nosotros */
+.nosotros {
+    margin-top: 5rem;
+}
+
+.nosotros h1 {
+    font-size: 40px;
+    text-align: center;
+    font-family: 'Merriweather', serif;
+}
+
+.nosotros .titulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nosotros .linea {
+    border-top: 4px solid #FEBB25;
+    width: 217px;
+    margin-bottom: 3rem;
+}
+
+.nosotros .elemento .img {
+    width: 500px;
+    height: 200px;
+    overflow: hidden;
+}
+
+.nosotros .elemento .img img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.nosotros .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 5rem;
+    row-gap: 5rem;
+    margin-bottom: 3rem;
+}
+
+.nosotros .col-lg-6 {
+    width: 500px;
+}
+
+.nosotros .elemento h4 {
+    font-size: 27px;
+    font-family: 'Merriweather', serif;
+}
+
+.nosotros .elemento p {
+    text-align: justify;
+    font-size: 27px;
+    font-family: 'Lato', sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+    .nosotros .col-lg-6 {
+        width: 260px;
+
+    }
+
+    .nosotros .elemento .img {
+        width: 255px;
+        height: auto;
+    }
+
+    .nosotros .elemento .img img {
+        width: 255px;
+        font-size: 167px;
+    }
+}

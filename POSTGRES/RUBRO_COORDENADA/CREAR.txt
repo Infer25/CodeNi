@@ -1,0 +1,46 @@
+create or replace    function  crear_tbl_rubro_coordenada
+(
+	in num_rubro_ int,
+	in num_departamento_region_ int,
+	in registrado_por_ int,
+	in longitud_ int,
+	in latitud_ int
+
+)
+returns table(
+	num  integer
+)
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer = (select case when (select max(num_rubro_coordenada) from tbl_rubro_coordenada) is null
+			then 1 else (select max(num_rubro_coordenada) from tbl_rubro_coordenada)+1 end);
+			
+
+begin
+
+
+insert into tbl_rubro_coordenada 
+(
+	num_rubro_coordenada ,
+	num_rubro ,
+	num_departamento_region,
+	coordenada,
+	registrado_por,
+	fecha_registro 
+)
+values
+(
+	identificador,
+	num_rubro_,
+	num_departamento_region_,
+	point(latitud_,longitud_),
+	registrado_por_,
+	current_timestamp
+);
+
+return query  select CE.num_rubro_coordenada
+					 from tbl_rubro_coordenada CE where CE.num_rubro_coordenada = identificador limit 1;
+
+end;
+$body$;

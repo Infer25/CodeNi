@@ -1,0 +1,72 @@
+create or replace    function  crear_tbl_rol_permiso
+(
+	in num_rol_ int,
+	in registrado_por_ int,
+	in list_permiso_ jsonb
+
+)
+returns integer
+    language 'plpgsql'
+AS $body$
+
+declare identificador integer :=0;
+declare contador integer :=0;
+declare valor integer:=1;
+declare valorjson integer:=0;
+begin
+
+drop table IF  EXISTS tem_list_permiso;
+create temp table IF NOT EXISTS  tem_list_permiso (id_  varchar(20),id_permiso varchar(20));
+
+
+
+contador:=(jsonb_array_length(list_permiso_));
+
+
+
+
+while valor <= contador loop
+
+ identificador:= (select case when (select max(num_rol_permiso) from tbl_rol_permiso) is null
+			then 1 else (select max(num_rol_permiso) from tbl_rol_permiso)+1 end);
+			
+
+insert into tem_list_permiso(id_,id_permiso)
+	select list_permiso_-> valorjson->>'id',
+	list_permiso_-> valorjson->>'num_permiso';
+
+if((select num_permiso from tbl_rol_permiso t where t.num_rol = num_rol_ and t.num_permiso = (
+select temp_.id_permiso::integer from tem_list_permiso temp_  where cast (temp_.id_ AS integer)= valor
+))is null) then
+insert into tbl_rol_permiso 
+(
+	num_rol_permiso ,
+	num_rol ,
+	num_permiso ,
+	num_estado,
+	registrado_por ,
+	fecha_registro
+)
+select 
+	identificador,
+	num_rol_,
+	e.id_permiso::integer,
+	(select num_estado from cat_estado where nombre='activo'),
+	registrado_por_,
+	current_date
+	from tem_list_permiso e where cast (e.id_ AS integer)= valor;
+end if;	
+valorjson:=valorjson+1;
+valor := valor+1;
+
+end loop;
+
+if not found then
+        return 0;
+    end if;
+ return 1;
+
+
+end;
+$body$;
+

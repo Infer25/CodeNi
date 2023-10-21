@@ -1,14 +1,21 @@
-create or replace      function  crear_cat_persona
+create or replace    function  crear_cat_persona
 (
 	in fechanac_fechaconstitucion_ timestamp,
-	in origen_ int ,--municipio
+	in origen_ int ,
 	in nombre_ varchar(120),
 	in apellido_razonsocial_ varchar(125) ,
 	in movil_ varchar(35),
 	in email_ varchar(35),
 	in direccion_ text,
 	in registrado_por_ int,
-	in identificador_ jsonb
+	in fecha_registro_ varchar(12),
+	in identificador_ jsonb,
+	in num_tipo_colaborador_ int,
+	in genero_ varchar(1),
+	in estad_civil_ int,
+	in imagen_ varchar(500),
+	in email_institucional_ varchar(75) ,
+	in telefono_institucional_ varchar(75)
 )
 returns table(
 	num  integer,
@@ -19,6 +26,11 @@ AS $body$
 
 declare identificador integer = (select case when (select max(num_persona) from cat_persona) is null
 			then 1 else (select max(num_persona) from cat_persona)+1 end);
+
+
+declare identificador_colaborador integer = (select case when (select max(num_colaborador) from cat_colaborador) is null
+			then 1 else (select max(num_colaborador) from cat_colaborador)+1 end);
+declare cod_colaborador varchar(100) = (SELECT concat('CLB-', identificador_colaborador));
 			
 declare contador integer :=0;
 
@@ -27,6 +39,15 @@ declare valor integer:=1;
 declare identificador_tbl2 integer = 0;
 
 declare valorjson integer:=0;
+
+
+
+declare estado_colaborador integer = (select case when (select c.nombre from tbl_historial_cargo_colaborador h 
+ 	inner join cat_cargo c on h.num_cargo = c.num_cargo
+ 		where h.num_colaborador = registrado_por_ 
+ 			and h.num_estado = (select e.num_estado from cat_estado e where e.nombre ='activo')) ='gerente'
+			then (select e.num_estado from cat_estado e where e.nombre ='activo')
+				else (select e.num_estado from cat_estado e where e.nombre ='en espera de aprobación') end);
 begin
 
 
@@ -56,7 +77,9 @@ values
 	email_ ,
 	direccion_,
 	registrado_por_,
-	current_timestamp
+	(select(TO_DATE(fecha_registro_, 'YYYYMMDD')))
+
+	
 );
 
 create temp table IF NOT EXISTS  tem_identificador  
@@ -107,12 +130,45 @@ select identificador_tbl2,
 	e.id_tipo_identificacion::integer,
 	e.identificacion,
 	registrado_por_,
-	current_timestamp
+	current_date
 	from tem_identificador e where cast (e.id_ AS integer)= valor;
 raise notice 'Out addition count %', valor;
 valorjson:=valorjson+1;
 valor := valor+1;
 end loop;
+
+insert into cat_colaborador 
+(
+	num_colaborador ,
+	num_tipo_colaborador ,
+	num_persona ,
+	num_estado_civil,
+	num_estado,
+	cod_colaborador ,
+	genero ,
+	imagen ,
+	email_institucional ,
+	telefono_institucional ,
+	registrado_por ,
+	fecha_registro 
+)
+values
+(
+	identificador_colaborador,
+	num_tipo_colaborador_,
+	identificador,
+	estad_civil_,
+	estado_colaborador,
+	cod_colaborador,
+	genero_,
+	imagen_,
+	email_institucional_,
+	telefono_institucional_,
+	registrado_por_,
+	current_date
+);
+
+
 
 return query  select CE.num_persona,
 					 CE.nombre
@@ -120,3 +176,4 @@ return query  select CE.num_persona,
 
 end;
 $body$;
+
